@@ -1,4 +1,4 @@
-import { GET_ADMIN } from "../actions/types";
+import { GET_ADMIN, GET_APPLICATIONS } from "../actions/types";
 
 const initialState = {
   profile: null
@@ -10,6 +10,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         profile: action.payload
+      };
+      case GET_APPLICATIONS:
+      return {
+        ...state,
+        profiles: action.payload
       };
     default:
       return state;
