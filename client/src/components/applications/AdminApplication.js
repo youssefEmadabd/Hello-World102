@@ -1,38 +1,41 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getApplication } from "../../actions/applicationActions";
+import { getAdminApplication } from "../../actions/applicationActions";
 import Spinner from "../common/Spinner";
-
-class Application extends Component {
+import {reviewapp } from "../../actions/applicationActions";
+class AdminApplication extends Component {
   componentDidMount() {
-    const { id }= this.props.match.params;
-    this.props.getApplication(id);
+    const { id } = this.props.match.params;
+    this.props.getAdminApplication(id);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.props.reviewapp();
   }
-  onChange(e) {
-    this.props.application.needConsultancy = !this.props.application.needConsultancy
+  onSubmit(e){
+    e.preventDefault();
+    this.props.reviewapp(this.props.history,this.props.match.params.id);
   }
   render() {
     let applicationContent;
-
+    const { application } = this.props;
     if (this.props.application == null) {
       applicationContent = <Spinner />;
     } else {
       const {
         partner,
         description,
-        applicants,
         messages,
         needConsultancy,
         reviewed
-      } = this.props.application;
+      } = application;
 
-      const apps = this.props.application.applicants.map((app, index) => (
-        <div key={index} className="p-3">
-          <i className="fa fa-check" /> {app}
+      const msgs = messages.map((msg, index) => (
+        <div key={index}>
+          <strong>{msg.name}: </strong>
+          <span>{msg.text} </span>
+          <br />
         </div>
       ));
-
       applicationContent = (
         <div className="row">
           <div className="col-md-12">
@@ -41,6 +44,15 @@ class Application extends Component {
               <p className="lead">
                 <i className="fa fa-check" /> <strong>Partner name: </strong>
                 <span>{partner.organization.name} </span>
+                <br />
+                <i className="fa fa-check" /> <strong>Partner Phone: </strong>
+                <span>{partner.organization.phone} </span>
+                <br />
+                <i className="fa fa-check" /> <strong>Partner Email: </strong>
+                <span>{partner.organization.email} </span>
+                <br />
+                <i className="fa fa-check" /> <strong>Partner Address: </strong>
+                <span>{partner.organization.address} </span>
                 <br />
                 <i className="fa fa-check" />{" "}
                 <strong>Needs Consultancy: </strong>
@@ -58,25 +70,16 @@ class Application extends Component {
                 </div>
               </div>
               <hr />
-              <h3 className="text-center text-info">Applicants</h3>
-              <div className="row">
-                <div className="d-flex flex-wrap justify-content-center align-items-center">
-                  {apps}
-                </div>
-                
+              <h3 className="text-center text-info">Negotiation</h3>
+              <div>
+                <div>{msgs}</div>
+                <form onSubmit={this.onSubmit}>
                 <input
-                    type="checkbox"
-                    class="custom-control-input"
-                    id="1"
-                    value={this.state.needConsultancy}
-                    onChange={this.onChange}
-                  >
-                    <label class="custom-control-label" for="defaultUnchecked">
-                      Need needConsultancy?:
-                    </label>
-                  </input>
-                 
-              
+                  type="submit"
+                  value="Approve"
+                  className="btn btn-info btn-block mt-4"
+                />
+              </form>
               </div>
             </div>
           </div>
@@ -87,15 +90,17 @@ class Application extends Component {
   }
 }
 
-Application.propTypes = {
-  getApplication: PropTypes.func.isRequired
+AdminApplication.propTypes = {
+  getAdminApplication: PropTypes.func.isRequired,
+  reviewapp: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  application: state.application.application
+  application: state.application
+
 });
 
 export default connect(
   mapStateToProps,
-  { getApplication }
-)(Application);
+  { getAdminApplication,reviewapp }
+)(AdminApplication);

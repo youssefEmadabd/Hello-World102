@@ -6,31 +6,35 @@ import { getCurrentAdmin } from "../../actions/adminActions";
 import Spinner from "../common/Spinner";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import {deletepartner} from "../../actions/partnerActions"
 class dashboard extends Component {
   componentDidMount() {
     this.props.getCurrentMember();
     this.props.getCurrentPartner();
     this.props.getCurrentAdmin();
+    this.onSubmit = this.onSubmit.bind(this);
   }
-
+  onSubmit(e) {
+    e.preventDefault();
+    this.props.deletepartner(this.props.history);
+  }
   render() {
     const { user } = this.props.auth;
     const { profile } = this.props.profile;
     const profile2 = this.props.profile2.profile;
     const adminProfile = this.props.adminProfile.profile;
-
     let dashboardContent;
 
     if (profile == null && profile2 == null && adminProfile == null) {
       dashboardContent = <Spinner />;
     } else {
-      if (profile !== null && profile.name) {
+      if (profile2 !== null && profile2.name) {
         dashboardContent = (
           <div>
             <p className="lead text-muted">
               Welcome{" "}
-              <Link to={`/api/profiles/member/${profile._id}`}>
-                {profile.name}
+              <Link to={`/api/profiles/member/${profile2._id}`}>
+                {profile2.name}
               </Link>
             </p>
             <Link
@@ -43,7 +47,7 @@ class dashboard extends Component {
               add skill
             </Link>{" "}
             <Link
-              to={`/api/tasks/member/mytasks/${profile._id}`}
+              to={`/api/tasks/member/mytasks/${profile2._id}`}
               className="btn btn-lg btn-info"
             >
               My Tasks
@@ -51,29 +55,58 @@ class dashboard extends Component {
           </div>
         );
       } else {
-        if (profile2 !== null && profile2.fieldOfWork) {
+        if (profile !== null && profile.fieldOfWork) {
           dashboardContent = (
             <div>
-              <p className="lead text-muted">
-                Welcome{" "}
-                <Link
+              <div className="text-right">
+              <form onSubmit={this.onSubmit}><input
+                  type="submit"
                   className="btn btn-lg btn-info"
-                  to={`/api/profiles/partner/${profile2._id}`}
-                >
-                  Show Profile:{profile2.name}
-                </Link>
-              </p>
+                  value="deleteAccount"
+                />
+                </form>
+              </div>
+              <p className="lead text-muted">Welcome </p>
+              <Link
+                className="btn btn-lg btn-info"
+                to={`/api/profiles/partner/${profile._id}`}
+              >
+                Show your Profile
+                {/* :{orgprofile.name} */}
+              </Link>
+              <br></br>
+              <br></br>
               <Link
                 to="/api/profiles/Edit-Partner"
                 className="btn btn-lg btn-info"
               >
                 Edit Partner's profile
               </Link>{" "}
+              <br></br>
+              <br></br>
               <Link
-                to="api/profiles/application/:id"
-                className="btn btn-lg btn=info"
+                to={`/api/profiles/partner/applications/${profile._id}`}
+                className="btn btn-lg btn-info"
+              >
+                My Applications
+              </Link>{" "}
+              <br></br>
+              <br></br>
+              <Link
+                to="api/profiles/partnerAppSubmit"
+                className="btn btn-lg btn-info"
               >
                 Post Application
+              </Link>{" "}
+              <br></br>
+              <br></br>
+              <Link to="/Partner-TaskForm" className="btn btn-lg btn-info">
+                Partner create task
+              </Link>{" "}
+              <br></br>
+              <br></br>
+              <Link to="/Consultant-TaskForm" className="btn btn-lg btn-info">
+                consultant create task
               </Link>
             </div>
           );
@@ -83,11 +116,12 @@ class dashboard extends Component {
               <div>
                 <p className="lead text-muted">Welcome {adminProfile.name}</p>
                 <p className="lead">You are Logged in as an admin</p>
+
                 <Link
-                  to={`/api/tasks/admin/mytasks/${adminProfile._id}`}
+                  to={`/api/applications/admin/all/`}
                   className="btn btn-lg btn-info"
                 >
-                  Unreviewed Tasks
+                  Applications
                 </Link>
               </div>
             );
@@ -105,12 +139,14 @@ class dashboard extends Component {
                 >
                   Create Member
                 </Link>{" "}
+                <div className="text-right">
                 <Link
                   to="/api/profiles/create-organization"
                   className="btn btn-lg btn-info"
                 >
                   Create Organization
                 </Link>
+                </div>
               </div>
             );
           }
@@ -133,22 +169,23 @@ class dashboard extends Component {
 }
 
 dashboard.propTypes = {
-  getCurrentMember: PropTypes.func.isRequired,
   getCurrentPartner: PropTypes.func.isRequired,
+  getCurrentMember: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
   profile2: PropTypes.object.isRequired,
-  adminProfile: PropTypes.object.isRequired
+  adminProfile: PropTypes.object.isRequired,
+  deletepartner:PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  profile: state.member,
+  profile2: state.member,
   auth: state.auth,
-  profile2: state.partner,
-  adminProfile: state.admin
+  profile: state.partner,
+  adminProfile: state.admin,
 });
 
 export default connect(
   mapStateToProps,
-  { getCurrentMember, getCurrentPartner, getCurrentAdmin }
+  { getCurrentMember, getCurrentPartner, getCurrentAdmin,deletepartner }
 )(dashboard);

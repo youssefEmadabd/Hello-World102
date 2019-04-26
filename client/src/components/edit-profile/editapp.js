@@ -4,44 +4,63 @@ import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextFieldGroupIcon from "../common/TextFieldGroupIcon";
-import { postApplication } from "../../actions/applicationActions";
-
-class parnterAppSubmit extends Component {
+import { getCurrentPartner } from "../../actions/partnerActions";
+import {editApp} from "../../actions/applicationActions"
+class editapp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      description: "",
-      needConsultancy: false,
+      description:"",
+      needConsultancy: "",
       errors: {}
     };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
+  componentDidMount() {
+    this.props.getCurrentPartner();
+  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
+    }
+
+    if (nextProps.application) {
+      const profile = nextProps.application;
+      profile.description = profile.description !== null ? profile.description:"";
+      this.setState({
+       description: profile.description,
+       needConsultancy: profile.needConsultancy,
+      });
     }
   }
 
   onSubmit(e) {
     e.preventDefault();
 
-    const ApplicationData = {
+    const AppData = {
       description: this.state.description,
-      needConsultancy: this.state.needConsultancy
+      needConsultancy: this.state.needConsultancy,
     };
+    if (AppData.description == "") {
+      delete AppData.description;
+    }
+    if (AppData.needConsultancy == "") {
+      delete AppData.needConsultancy;
+    }
+
     var e = document.getElementById("select");
     var opt = e.options[e.selectedIndex].value;
     if(opt === "true"){
-      this.setState({
-        needConsultancy:true
-      });
-    }
-    else{
-      this.setState({needConsultancy:false});
-    }
-    this.props.postApplication(ApplicationData, this.props.history);
+        this.setState({
+          needConsultancy:true
+        });
+      }
+      else{
+        this.setState({needConsultancy:false});
+      }
+    this.props.editApp(AppData, this.props.history,this.props.match.params.id);
   }
 
   onChange(e) {
@@ -56,11 +75,12 @@ class parnterAppSubmit extends Component {
         <div className="container">
           <div className="row">
             <div className="col-md-8 m-auto">
-              <h1 className="display-4 text-center">Create Application</h1>
-              <p className="lead text-center">please fill all</p>
+              <h1 className="display-4 text-center">Edit application</h1>
+              <p className="lead text-center">
+              </p>
               <form onSubmit={this.onSubmit}>
-                <TextFieldGroup
-                  placeholder="*desc"
+              <TextFieldGroup
+                  placeholder="desc"
                   name="description"
                   value={this.state.description}
                   onChange={this.onChange}
@@ -75,24 +95,8 @@ class parnterAppSubmit extends Component {
                       ? errors.error
                       : null
                   }
-                /> <TextFieldGroup
-                placeholder="*consultancy"
-                name="needConsultancy?"
-                value={this.state.needConsultancy}
-                onChange={this.onChange}
-                error={
-                  errors.error == '"needConsultancy" is required'
-                    ? errors.error
-                    : errors.error ==
-                      '"description" is not allowed to be empty'
-                    ? errors.error
-                    : errors.error ==
-                      '"description" length must be at least 3 characters long'
-                    ? errors.error
-                    : null
-                }
-              />
-               <select id="select" name="Select profile type">
+                /> 
+                <select id="select" name="Select profile type">
                     <option value="true">needConsultancy</option>
                     <option value="false">does not need consultancy</option>
                   </select>
@@ -110,7 +114,9 @@ class parnterAppSubmit extends Component {
   }
 }
 
-parnterAppSubmit.propTypes = {
+editapp.propTypes = {
+  editApp: PropTypes.func.isRequired,
+  getCurrentPartner: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -122,5 +128,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { postApplication }
-)(withRouter(parnterAppSubmit));
+  { editApp, getCurrentPartner }
+)(withRouter(editapp));

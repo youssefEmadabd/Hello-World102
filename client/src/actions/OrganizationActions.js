@@ -19,7 +19,7 @@ export const createOrganization = (
   const part = "Partner";
   switch (value) {
     case part:
-      history.push("/cp/" + json.data._id);
+      history.push(`/cp/${json.data._id}`);
       break;
     default:
       dispatch({

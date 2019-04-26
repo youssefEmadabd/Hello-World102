@@ -1,35 +1,35 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { getApplication } from "../../actions/applicationActions";
+import { getPartnerApplication } from "../../actions/applicationActions";
 import Spinner from "../common/Spinner";
 
-class Application extends Component {
+class PartnerApplication extends Component {
   componentDidMount() {
-    const { id }= this.props.match.params;
-    this.props.getApplication(id);
-  }
-  onChange(e) {
-    this.props.application.needConsultancy = !this.props.application.needConsultancy
+    const { id } = this.props.match.params;
+    this.props.getPartnerApplication(id);
   }
   render() {
     let applicationContent;
+    const { application } = this.props;
 
-    if (this.props.application == null) {
+    if (application == null) {
       applicationContent = <Spinner />;
     } else {
       const {
         partner,
         description,
-        applicants,
         messages,
         needConsultancy,
         reviewed
-      } = this.props.application;
+      } = application;
 
-      const apps = this.props.application.applicants.map((app, index) => (
-        <div key={index} className="p-3">
-          <i className="fa fa-check" /> {app}
+      const msgs = messages.map((msg, index) => (
+        <div key={index}>
+          <strong>{msg.name}: </strong>
+          <span>{msg.text} </span>
+          <br />
         </div>
       ));
 
@@ -41,6 +41,15 @@ class Application extends Component {
               <p className="lead">
                 <i className="fa fa-check" /> <strong>Partner name: </strong>
                 <span>{partner.organization.name} </span>
+                <br />
+                <i className="fa fa-check" /> <strong>Partner Phone: </strong>
+                <span>{partner.organization.phone} </span>
+                <br />
+                <i className="fa fa-check" /> <strong>Partner Email: </strong>
+                <span>{partner.organization.email} </span>
+                <br />
+                <i className="fa fa-check" /> <strong>Partner Address: </strong>
+                <span>{partner.organization.address} </span>
                 <br />
                 <i className="fa fa-check" />{" "}
                 <strong>Needs Consultancy: </strong>
@@ -58,26 +67,17 @@ class Application extends Component {
                 </div>
               </div>
               <hr />
-              <h3 className="text-center text-info">Applicants</h3>
-              <div className="row">
-                <div className="d-flex flex-wrap justify-content-center align-items-center">
-                  {apps}
-                </div>
-                
-                <input
-                    type="checkbox"
-                    class="custom-control-input"
-                    id="1"
-                    value={this.state.needConsultancy}
-                    onChange={this.onChange}
-                  >
-                    <label class="custom-control-label" for="defaultUnchecked">
-                      Need needConsultancy?:
-                    </label>
-                  </input>
-                 
-              
+              <h3 className="text-center text-info">Negotiation</h3>
+              <div>
+                <div>{msgs}</div>
               </div>
+              <hr />
+              <Link
+                to={`/api/applications/partner/negotiate/${application._id}`}
+                className="btn btn-lg btn-info"
+              >
+                Negotiate
+              </Link>
             </div>
           </div>
         </div>
@@ -87,8 +87,8 @@ class Application extends Component {
   }
 }
 
-Application.propTypes = {
-  getApplication: PropTypes.func.isRequired
+PartnerApplication.propTypes = {
+  getPartnerApplication: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -97,5 +97,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getApplication }
-)(Application);
+  { getPartnerApplication }
+)(PartnerApplication);

@@ -4,17 +4,15 @@ import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
 //import TextFieldGroupIcon from "../common/TextFieldGroupIcon";
-import {createPartner } from "../../actions/partnerActions";
+import { createPartner } from "../../actions/partnerActions";
 
-class CreatePartner extends Component {  
-  
+class CreatePartner extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fieldOfWork:"",
+      fieldOfWork: "",
       errors: {}
     };
-
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -28,10 +26,14 @@ class CreatePartner extends Component {
     e.preventDefault();
 
     const partnerData = {
-     fieldOfWork:this.state.fieldOfWork,
+      fieldOfWork: this.state.fieldOfWork
     };
-    
-    this.props.createPartner(partnerData, this.props.history,this.props.match.params.id);
+
+    this.props.createPartner(
+       partnerData,
+      this.props.history,
+      this.props.match.params.id
+    );
   }
 
   onChange(e) {
@@ -58,7 +60,8 @@ class CreatePartner extends Component {
                   error={
                     errors.error == '"fieldOfWork" is required'
                       ? errors.error
-                      : errors.error == '"fieldOfWork" is not allowed to be empty'
+                      : errors.error ==
+                        '"fieldOfWork" is not allowed to be empty'
                       ? errors.error
                       : errors.error ==
                         '"FieldOfWork" length must be at least 3 characters long'

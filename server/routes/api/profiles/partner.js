@@ -63,24 +63,6 @@ router.get(
     }
   }
 );
-// @route GET api/profiles/partner
-// @desc Get Current partner's Profile
-// @access private
-router.get(
-  "/",
-  passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    try {
-      const partner = await Partner.findOne({ user: req.user.id })
-        .populate("fieldOfWork", ["fieldOfWork"])
-        .populate("partner", ["name"]);
-      if (!partner) return res.status(404).send({ error: "Partner not found" });
-      return res.json({ data: partner });
-    } catch (error) {
-      return res.status(404).json({ membernotfound: "partner not found" });
-    }
-  }
-);
 
 // @route GET api/profiles/partner
 // @desc Get Current Partner's Profile
@@ -102,69 +84,58 @@ router.get(
   }
 );
 
-// @route   PUT api/profiles/partner/:id
+// @route   PUT api/profiles/partner
 // @desc    Edit Partner's Profile
 // @access  Private
 router.put(
-  "/:id",
+  "/",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     try {
-      const partner = await Partner.findOne({ user: req.user.id });
-      const organization = await Organization.findOne(partner.organization);
+      const organization = await Organization.findOne({ user: req.user.id });
+      const partner = await Partner.findOne({
+        organization: organization._id
+      });
       if (!partner)
         return res.status(404).send({ error: "Partner does not exist" });
-      const isValidated = validator.updateValidation(req.body);
-      if (isValidated.error)
-        return res
-          .status(400)
-          .send({ error: isValidated.error.details[0].message });
-          const isValidated2 = validator2.createValidation(req.body);
-      if (isValidated2.error)
-        return res
-          .status(400)
-          .send({ error: isValidated.error.details[0].message });
+      // const isValidated = validator.updateValidation(req.body);
+      // if (isValidated.error)
+      //   return res
+      //     .status(400)
+      //     .send({ error: isValidated.error.details[0].message });
+      const orgFields = {};
+      if (req.body.name) orgFields.name = req.body.name;
+      if (req.body.phone) orgFields.phone = req.body.phone;
+      if (req.body.email) orgFields.email = req.body.email;
+      if (req.body.address) orgFields.address = req.body.address;
+      const fields = {};
+      if (req.body.fieldOfWork) fields.fieldOfWork = req.body.fieldOfWork;
+      orgFields.social = {};
+      if (req.body.youtube) orgFields.social.youtube = req.body.youtube;
+      if (req.body.facebook) orgFields.social.facebook = req.body.facebook;
+      if (req.body.twitter) orgFields.social.twitter = req.body.twitter;
+      if (req.body.linkedin) orgFields.social.linkedin = req.body.linkedin;
+      if (req.body.instagram) orgFields.social.instagram = req.body.instagram;
 
-          const orgFields = {};
-          if (req.body.name) orgFields.name = req.body.name;
-          if (req.body.phone) orgFields.phone = req.body.phone;
-          if (req.body.email) orgFields.email = req.body.email;
-          if (req.body.address) orgFields.address = req.body.address;
-          const fields = {};
-          if (req.body.fieldOfWork) fields.fieldOfWork = req.body.fieldOfWork;
-
-          partner.save();
-          organization.save();
-          fields.user = req.user.id;
-    
-          orgFields.social = {};
-          if (req.body.youtube) orgFields.social.youtube = req.body.youtube;
-          if (req.body.facebook) orgFields.social.facebook = req.body.facebook;
-          if (req.body.twitter) orgFields.social.twitter = req.body.twitter;
-          if (req.body.linkedin) orgFields.social.linkedin = req.body.linkedin;
-          if (req.body.instagram)
-            orgFields.social.instagram = req.body.instagram;
-    
-          if (req.body.avatar) orgFields.avatar = req.body.avatar;
-    
-          const updatedpartner = await Partner.findOneAndUpdate(
-            { user: req.user.id },
-            {
-              $set: Fields
-            }
-          );
-          const updatedorganization = await Organization.findOneAndUpdate(
-            { user: req.user.id },
-            {
-              $set: orgFields
-            }
-          );
-          return res.json({ msg: "partner updated successfully" });
-        } catch (err) {
-          return res.status(404).json({ usernotfound: "User not found" });
+      if (req.body.avatar) orgFields.avatar = req.body.avatar;
+      const updatedpartner = await Partner.findOneAndUpdate(
+        { organization: organization._id },
+        {
+          $set: fields
         }
-      }
-    );
+      );
+      const updatedorganization = await Organization.findOneAndUpdate(
+        { user: req.user.id },
+        {
+          $set: orgFields
+        }
+      );
+      return res.json({ msg: "partner updated successfully" });
+    } catch (err) {
+      return res.status(404).json({ usernotfound: "User not found" });
+    }
+  }
+);
 
 // @route POST api/profiles/partner/board-members/add/:id
 // @decs Adds Board Member To Partner's Profile
@@ -367,6 +338,7 @@ router.delete(
     try {
       const partner = await Partner.findById(req.params.id);
       if (!partner) return res.status(404).send({ error: "Partner not found" });
+
       const partner2 = await Partner.findById(req.params.id2);
       if (!partner2)
         return res.status(404).send({ error: "Partner not found" });
@@ -417,22 +389,23 @@ router.delete(
   }
 );
 
-// @route   DELETE api/profiles/partner/delete/:id
+// @route   DELETE api/profiles/partner/delete
 // @desc    Delete Partner's Profile
 // @access  Private
 router.delete(
-  "/:id",
+  "/delete",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     try {
-      const partner = await Partner.findById(req.params.id);
-      const orgid = partner.organization;
+      const organization = await Organization.findOne({user: req.user.id})
+      const partner = await Partner.findOne({organization:organization._id});
       if (!partner) return res.status(404).send({ error: "Partner not found" });
-      const deletedPartner = await Partner.findByIdAndRemove(req.params.id);
-      const deletedorganiztion = await Organization.findByIdAndRemove(orgid);
+
+      const deletedPartner = await Partner.findByIdAndRemove(partner._id);  
+      const deletedorganization = await Organization.findByIdAndRemove(organization._id)
       const deletedUser = await User.findByIdAndRemove(req.user.id);
 
-      res.json({ msg: "deleted", data: deletedPartner });
+      res.json({ msg: "deleted", data: {deletedPartner,deletedorganization,deletedUser} });
     } catch (error) {
       return res.status(404).json({ partnernotfound: "Partner not found" });
     }

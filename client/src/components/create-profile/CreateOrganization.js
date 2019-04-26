@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextFieldGroupIcon from "../common/TextFieldGroupIcon";
 import { createOrganization } from "../../actions/OrganizationActions";
-import Partner from "../profiles/Partner";
 
 class CreateOrganization extends Component {
   constructor(props) {
@@ -64,7 +63,7 @@ class CreateOrganization extends Component {
     }
     var e = document.getElementById("select");
     var opt = e.options[e.selectedIndex].value;
-console.log(opt)
+    console.log(opt);
 
     this.props.createOrganization(organizationData, this.props.history, opt);
   }
@@ -72,6 +71,9 @@ console.log(opt)
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
+  // handleClick() {
+  //   this.props.history = this.props.history.push("/");
+  // }
 
   render() {
     const { errors } = this.state;
@@ -214,6 +216,7 @@ console.log(opt)
                         : null
                     }
                   />
+
                   <select id="select" name="Select profile type">
                     <option value="Partner">Partner</option>
                   </select>
