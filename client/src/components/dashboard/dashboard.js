@@ -118,7 +118,7 @@ class dashboard extends Component {
                 <p className="lead">You are Logged in as an admin</p>
 
                 <Link
-                  to={`/api/applications/admin/all/`}
+                  to="/api/applications/admin/all"
                   className="btn btn-lg btn-info"
                 >
                   Applications

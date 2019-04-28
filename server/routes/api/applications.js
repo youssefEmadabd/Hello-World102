@@ -172,7 +172,9 @@ router.get(
       const admin = await Admin.findOne({ user: req.user.id });
       if (!admin) return res.status(404).send({ error: "Admin not found" });
 
-      const applications = await Application.find({}).populate({
+      const applications = await Application.find({
+        reviewed: false
+      }).populate({
         path: "partner",
         populate: {
           path: "organization"
@@ -185,7 +187,7 @@ router.get(
   }
 );
 
-// @route   GET api/applications/partner/:id
+// @route   GET api/applications/partner
 // @desc    Gets Partner's Applications
 // @access  Private
 router.get(
@@ -267,11 +269,11 @@ router.get(
   }
 );
 
-// @route   GET api/applications/partner/:appID
+// @route   GET api/applications/partner/:id
 // @desc    Partner gets Application
 // @access  Private
 router.get(
-  "/partner/:appID",
+  "/partner/:id",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     try {
@@ -279,7 +281,7 @@ router.get(
       const partner = await Partner.findOne({ organization: organization._id });
       if (!partner) return res.status(404).send({ error: "Partner not found" });
 
-      const application = await Application.findById(req.params.appID).populate(
+      const application = await Application.findById(req.params.id).populate(
         {
           path: "partner",
           populate: { path: "organization" }
@@ -290,7 +292,7 @@ router.get(
 
       return res.json({ data: application });
     } catch (error) {
-      res.status(404).json({ adminnotfound: "Admin not found" });
+      res.status(404).json({ partnernotfound: "partner not found" });
       console.log(error);
     }
   }
