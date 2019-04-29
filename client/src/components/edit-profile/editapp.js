@@ -30,7 +30,8 @@ class editapp extends Component {
       const profile = nextProps.application;
       profile.description = profile.description !== null ? profile.description:"";
       this.setState({
-       description: profile.description
+       description: profile.description,
+       needConsultancy:profile.needConsultancy
       });
     }
   }

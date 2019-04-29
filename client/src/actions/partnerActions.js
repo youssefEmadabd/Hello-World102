@@ -1,6 +1,7 @@
-import { GET_PARTNER } from "./types";
-import { GET_ERRORS } from "./types";
+import { GET_ERRORS,GET_PARTNER  } from "./types";
+import {setCurrentUser} from "./authActions"
 const fetch = require("node-fetch");
+
 
 // Get Partner
 export const getPartner = id => async dispatch => {
@@ -88,12 +89,15 @@ Authorization: localStorage.getItem("jwtToken")
   }
   });
   const json = await res.json();
-  if (json.data) {
-    history.push("/App");
+  if (json.msg) {
+    history.push("/");
+    localStorage.removeItem("jwtToken");
+  dispatch(setCurrentUser({}));
   } else {
     dispatch({
       type: GET_ERRORS,
       payload: json
     });
   }
+  
 };

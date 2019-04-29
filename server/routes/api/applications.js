@@ -55,31 +55,24 @@ router.put(
   async (req, res) => {
     try {
       const application = await Application.findById(req.params.id);
-      if (!application)
-        return res.status(404).send({ error: "Application does not exist" });
+      // if (!application)
+      //   return res.status(404).send({ error: "Application does not exist" });
       const partner = await Partner.findOne({
         _id: application.partner
       });
       if (!partner)
         return res.status(404).send({ error: "Partner does not exist" });
-      
-      if (application.partner != partner._id) {
-        return res.status(400).json({
-          Unauthorized: "This Partner is not responsible for this Application"
-        });
-      }
-
       if (application.reviewed) {
         return res
           .status(400)
           .json({ error: "Cant edit application after it has been reviewed" });
       }
 
-      const isValidated = validator.updateValidation(req.body);
-      if (isValidated.error)
-        return res
-          .status(400)
-          .send({ error: isValidated.error.details[0].message });
+      // const isValidated = validator.updateValidation(req.body);
+      // if (isValidated.error)
+      //   return res
+      //     .status(400)
+      //     .send({ error: isValidated.error.details[0].message });
       const fields = {};
       if (req.body.needConsultancy) fields.needConsultancy = req.body.needConsultancy;
       if (req.body.description) fields.description = req.body.description;

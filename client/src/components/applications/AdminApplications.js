@@ -4,9 +4,11 @@ import Spinner from "../common/Spinner";
 import AdminAplicationItem from "../applications/AdminApplicationItem";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+
 class AdminApplications extends Component {
   componentDidMount() {
-    this.props.getAdminApplications();
+    const { id } = this.props.match.params;
+    this.props.getAdminApplications(id);
   }
   render() {
     const { applications } = this.props.application;

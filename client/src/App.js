@@ -172,7 +172,7 @@ class App extends Component {
               <Switch>
                 <PrivateRoute
                   exact
-                  path="/api/applications/admin/all"
+                  path="/api/applications/admin"
                   component={AdminApplications}
                 />
               </Switch>

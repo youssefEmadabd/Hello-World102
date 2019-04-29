@@ -49,9 +49,9 @@ export const postApplication = (ApplicationData, history) => async dispatch => {
     });
   }
 };
-export const editApp = (appData, history, appID) => async dispatch => {
+export const editApp = (appData, history,id) => async dispatch => {
   const body = JSON.stringify(appData);
-  const res = await fetch(`http://localhost:5000/api/applications/${appID}`, {
+  const res = await fetch(`http://localhost:5000/api/applications/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -111,7 +111,7 @@ else {
 
 // Get Admin Applications
 export const getAdminApplications = () => async dispatch => {
-  const res = await fetch(`http://localhost:5000/api/applications/admin`, {
+  const res = await fetch("http://localhost:5000/api/applications/admin", {
     headers: {
       Authorization: localStorage.getItem("jwtToken")
     }
