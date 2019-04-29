@@ -242,23 +242,21 @@ router.post(
   }
 );
 
-// @route POST api/profiles/member/past-events/:id
+// @route POST api/profiles/member/past-event/:id
 // @desc Adds Past Event To Member's Profile
 // @access private
 router.post(
-  "/past-events/:id",
+  "/past-event",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     try {
       const { title, description, location } = req.body;
-      const id = req.params.id;
-
-      const member1 = await Member.findById(id);
-
+      const member1 = await Member.findOne({user : req.user.id});
+ // "There is no Member profile for this user"
       if (!member1) {
         return res
           .status(400)
-          .json({ profile: "There is no Member profile for this user" });
+          .json({ profile: "There is no Member profile for this user"});
       }
       const isValidated = validator.eventValidation(req.body);
       if (isValidated.error)

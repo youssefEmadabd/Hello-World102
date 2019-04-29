@@ -21,7 +21,7 @@ class AddPastEvents extends Component {
   }
   componentDidMount() {
     this.props.getCurrentMember();
-    console.log(this.props)
+    // console.log(this.props)
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
@@ -53,14 +53,14 @@ class AddPastEvents extends Component {
         <div className="container">
           <div className="row">
             <div className="col-md-8 m-auto">
-              <h1 className="display-4 text-center">Edit Member Profile</h1>
+              <h1 className="display-4 text-center">Add past event</h1>
               <p className="lead text-center">
-                Only fill fields you wish to update
+                fill in the Info about your event
               </p>
               <form onSubmit={this.onSubmit}>
                 <TextFieldGroup
-                  placeholder="Name"
-                  name="name"
+                  placeholder="title"
+                  name="title"
                   value={this.state.title}
                   onChange={this.onChange}
                 //   error={
@@ -113,7 +113,7 @@ class AddPastEvents extends Component {
 AddPastEvents.propTypes = {
   addpastevents: PropTypes.func.isRequired,
   getCurrentMember: PropTypes.func.isRequired,
-//   profile: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
 

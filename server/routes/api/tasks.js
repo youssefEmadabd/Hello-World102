@@ -165,7 +165,6 @@ router.post(
       const organization = await Organization.findOne({user : req.user.id})
       const partner = await Partner.findOne({organization: organization._id});
       if (!partner) return res.status(404).send({ error: "Partner not found" });
-
       const application = await Application.findById(req.params.id);
       if (!application)
         return res.status(404).send({ error: "Application not found" });
@@ -188,9 +187,9 @@ router.post(
           .json({ error: "This Application has not been reviewed yet" });
       }
 
-      if (application.partner != req.params.id) {
+      if (application.partner != partner.id) {
         return res.status(400).json({
-          Unauthorized: "This Partner is not responsible for this Application"
+         Unauthorized: "This Partner is not responsible for this Application"
         });
       }
 
@@ -214,6 +213,7 @@ router.post(
     }
   }
 );
+
 
 // @route   POST api/tasks/partner/respond/:id/:id2/:taskID
 // @desc    Partner Responds to Member Applications
@@ -476,15 +476,16 @@ router.delete(
   }
 );
 
-// @route   POST api/tasks/consultant/post/:id/:appID
+// @route   POST api/tasks/consultant/:appID
 // @desc    Consultant Posts a Task
 // @access  private
 router.post(
-  "/consultant/:id/:appID",
+  "/consultant/:appID",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     try {
-      const consultant = await Consultant.findById(req.params.id);
+      const organization = await Organization.findOne({user : req.user.id})
+      const consultant = await Consultant.findOne({organization: organization._id});
       if (!consultant)
         return res.status(404).send({ error: "Consultant not found" });
 

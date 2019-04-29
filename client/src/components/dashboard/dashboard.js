@@ -52,6 +52,12 @@ class dashboard extends Component {
               className="btn btn-lg btn-info"
             >
               My Tasks
+            </Link>{" "}
+            <Link
+              to="/api/profiles/past-event"
+              className="btn btn-lg btn-info"
+            >
+              add past-event
             </Link>
           </div>
         );
@@ -101,14 +107,7 @@ class dashboard extends Component {
               </Link>{" "}
               <br></br>
               <br></br>
-              <Link to="/Partner-TaskForm" className="btn btn-lg btn-info">
-                Partner create task
-              </Link>{" "}
-              <br></br>
-              <br></br>
-              <Link to="/Consultant-TaskForm" className="btn btn-lg btn-info">
-                consultant create task
-              </Link>
+           
             </div>
           );
         } else {
