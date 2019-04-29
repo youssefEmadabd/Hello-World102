@@ -124,3 +124,25 @@ export const addSkillMember = (memberData, history) => async dispatch => {
     });
   }
 };
+// add past-events
+export const addpastevents = (memberData, history) => async dispatch => {
+  const body = JSON.stringify(memberData);
+  const res = await fetch("http://localhost:5000/api/profiles/member/past-event", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("jwtToken")
+    },
+    body: body
+  });
+  const json = await res.json();
+  console.log(json)
+  if (json.msg) {
+    history.push("/dashboard");
+  } else {
+    dispatch({
+      type: GET_ERRORS,
+      payload: json
+    });
+  }
+};

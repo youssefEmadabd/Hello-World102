@@ -8,11 +8,16 @@ import {
 
 const fetch = require("node-fetch");
 
+
 // Post Task
-export const postTask = (taskData, history) => async dispatch => {
+export const PartnerPostTask = (
+  taskData,
+  appid,
+  history
+  ) => async dispatch => {
   const body = JSON.stringify(taskData);
   const res = await fetch(
-    `http://localhost:5000/api/tasks/partner/${taskData.ID}/${taskData.application}`,
+    `http://localhost:5000/api/tasks/partner/${appid}`,
     {
       method: "POST",
       headers: {
@@ -31,13 +36,12 @@ export const postTask = (taskData, history) => async dispatch => {
 // consultant creates task
 export const ConsultantPostTask = (
   taskData,
-  id,
   appid,
   history
 ) => async dispatch => {
   const body = JSON.stringify(taskData);
   const res = await fetch(
-    `http://localhost:5000/api/tasks/consultant/${id}/${appid}`,
+    `http://localhost:5000/api/tasks/consultant/${appid}`,
     {
       method: "POST",
       headers: {
