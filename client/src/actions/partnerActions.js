@@ -79,7 +79,7 @@ export const getCurrentPartner = id => async dispatch => {
   }
 };
 export const deletepartner = (history) => async dispatch => {
-  const res = await fetch("http://localhost:5000/api/profiles/pratner/delete",{
+  const res = await fetch("http://localhost:5000/api/profiles/partner/delete",{
   method:"DELETE",
   headers:{
 "Content-Type": "application/json",
@@ -89,7 +89,7 @@ Authorization: localStorage.getItem("jwtToken")
   });
   const json = await res.json();
   if (json.data) {
-    history.push("/");
+    history.push("/App");
   } else {
     dispatch({
       type: GET_ERRORS,

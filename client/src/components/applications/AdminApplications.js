@@ -4,7 +4,6 @@ import Spinner from "../common/Spinner";
 import AdminAplicationItem from "../applications/AdminApplicationItem";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 class AdminApplications extends Component {
   componentDidMount() {
     this.props.getAdminApplications();

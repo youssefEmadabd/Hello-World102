@@ -87,7 +87,7 @@ router.put(
         {_id:application._id},
         { $set: fields }
       );
-      return res.json({ msg: "Application updated successfully" ,data: updatedApplication});
+      return res.json({ msg: "Application updated successfully" });
     } catch (error) {
       return res.status(404).json({ partnernotfound: "Partner not found" });
     }

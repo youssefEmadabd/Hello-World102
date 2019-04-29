@@ -94,7 +94,8 @@ class AdminApplication extends Component {
 }
 
 AdminApplication.propTypes = {
-  getAdminApplication: PropTypes.func.isRequired
+  getAdminApplication: PropTypes.func.isRequired,
+  reviewapp: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({

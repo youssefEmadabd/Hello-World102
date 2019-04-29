@@ -405,7 +405,7 @@ router.delete(
       const deletedorganization = await Organization.findByIdAndRemove(organization._id)
       const deletedUser = await User.findByIdAndRemove(req.user.id);
 
-      res.json({ msg: "deleted", data: {deletedPartner,deletedorganization,deletedUser} });
+      res.json({ msg: "deleted" });
     } catch (error) {
       return res.status(404).json({ partnernotfound: "Partner not found" });
     }
