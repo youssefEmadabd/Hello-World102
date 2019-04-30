@@ -10,6 +10,7 @@ class EditPartner extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      name:"",
       fieldOfWork:"",
       phone: "",
       email: "",
@@ -35,7 +36,7 @@ class EditPartner extends Component {
 
     if (nextProps.partner) {
       const profile = nextProps.partner;
-      profile.name = profile.organization.name !== null ? profile.name:"";
+      profile.name = profile.name !== null ? profile.name:"";
         profile.fieldOfWork = profile.fieldOfWork !== null ? profile.fieldOfWork: "";
         profile.address = profile.address !== null ? profile.address:"";
         profile.email = profile.email !== null ? profile.email : "";
@@ -54,7 +55,8 @@ class EditPartner extends Component {
           profile.social.instagram !== null ? profile.social.instagram : "";
   
       this.setState({
-       fieldOfWork: profile.fieldOfWork,
+       name: profile.name,
+        fieldOfWork: profile.fieldOfWork,
        address: profile.address,
        email : profile.email,
        phone : profile.phone,
@@ -71,6 +73,7 @@ class EditPartner extends Component {
     e.preventDefault();
 
     const partnerData = {
+      name : this.state.name,
       fieldOfWork: this.state.fieldOfWork,
       address: this.state.address,
       email : this.state.email,
@@ -82,7 +85,7 @@ class EditPartner extends Component {
       instagram: this.state.instagram
     };
     if (partnerData.name == "") {
-      delete partnerData.fieldOfWork;
+      delete partnerData.name;
     }
     if (partnerData.email == "") {
       delete partnerData.email;

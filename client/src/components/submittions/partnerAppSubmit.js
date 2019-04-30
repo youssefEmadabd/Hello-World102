@@ -75,23 +75,7 @@ class parnterAppSubmit extends Component {
                       ? errors.error
                       : null
                   }
-                /> <TextFieldGroup
-                placeholder="*consultancy"
-                name="needConsultancy?"
-                value={this.state.needConsultancy}
-                onChange={this.onChange}
-                error={
-                  errors.error == '"needConsultancy" is required'
-                    ? errors.error
-                    : errors.error ==
-                      '"description" is not allowed to be empty'
-                    ? errors.error
-                    : errors.error ==
-                      '"description" length must be at least 3 characters long'
-                    ? errors.error
-                    : null
-                }
-              />
+                />
                <select id="select" name="Select profile type">
                     <option value="true">needConsultancy</option>
                     <option value="false">does not need consultancy</option>

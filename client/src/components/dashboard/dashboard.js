@@ -13,10 +13,11 @@ class dashboard extends Component {
     this.props.getCurrentPartner();
     this.props.getCurrentAdmin();
     this.onSubmit = this.onSubmit.bind(this);
+    
   }
   onSubmit(e) {
     e.preventDefault();
-    this.props.deletepartner(this.props.history);
+   this.props.deletepartner(this.props.history);
   }
   render() {
     const { user } = this.props.auth;
@@ -72,7 +73,7 @@ class dashboard extends Component {
                 to={`/api/profiles/partner/${profile._id}`}
               >
                 Show your Profile
-                {/* :{orgprofile.name} */}
+               
               </Link>
               <br></br>
               <br></br>
@@ -116,9 +117,17 @@ class dashboard extends Component {
               <div>
                 <p className="lead text-muted">Welcome {adminProfile.name}</p>
                 <p className="lead">You are Logged in as an admin</p>
-
                 <Link
-                  to={`/api/applications/admin/all/`}
+                  className="btn btn-lg btn-info"
+                  to={`/api/tasks/admin/mytasks/${adminProfile._id}`}
+                >
+                  {" "}
+                  Unreviewed Tasks
+                </Link>{" "}
+                <br></br>
+                <br></br>
+                <Link
+                  to="/api/applications/admin"
                   className="btn btn-lg btn-info"
                 >
                   Applications

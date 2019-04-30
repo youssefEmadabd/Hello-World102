@@ -8,17 +8,19 @@ class AdminApplication extends Component {
   componentDidMount() {
     const { id } = this.props.match.params;
     this.props.getAdminApplication(id);
-    this.onSubmit = this.onSubmit.bind(this);
-    this.props.reviewapp();
+   this.onSubmit = this.onSubmit.bind(this);
   }
-  onSubmit(e){
-    e.preventDefault();
-    this.props.reviewapp(this.props.history,this.props.match.params.id);
-  }
+   
+ onSubmit(e){
+  e.preventDefault();
+  this.props.reviewapp(this.props.history,this.props.match.params.id);
+}
   render() {
     let applicationContent;
+
     const { application } = this.props;
-    if (this.props.application == null) {
+
+    if (application == null) {
       applicationContent = <Spinner />;
     } else {
       const {
@@ -36,6 +38,7 @@ class AdminApplication extends Component {
           <br />
         </div>
       ));
+
       applicationContent = (
         <div className="row">
           <div className="col-md-12">
@@ -96,11 +99,10 @@ AdminApplication.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  application: state.application
-
+  application: state.application.application
 });
 
 export default connect(
   mapStateToProps,
-  { getAdminApplication,reviewapp }
+  { getAdminApplication }
 )(AdminApplication);

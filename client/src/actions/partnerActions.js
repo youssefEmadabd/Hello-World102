@@ -1,6 +1,7 @@
-import { GET_PARTNER } from "./types";
-import { GET_ERRORS } from "./types";
+import { GET_ERRORS,GET_PARTNER  } from "./types";
+import {setCurrentUser} from "./authActions"
 const fetch = require("node-fetch");
+
 
 // Get Partner
 export const getPartner = id => async dispatch => {
@@ -79,7 +80,7 @@ export const getCurrentPartner = id => async dispatch => {
   }
 };
 export const deletepartner = (history) => async dispatch => {
-  const res = await fetch("http://localhost:5000/api/profiles/pratner/delete",{
+  const res = await fetch("http://localhost:5000/api/profiles/partner/delete",{
   method:"DELETE",
   headers:{
 "Content-Type": "application/json",
@@ -88,12 +89,15 @@ Authorization: localStorage.getItem("jwtToken")
   }
   });
   const json = await res.json();
-  if (json.data) {
+  if (json.msg) {
     history.push("/");
+    localStorage.removeItem("jwtToken");
+  dispatch(setCurrentUser({}));
   } else {
     dispatch({
       type: GET_ERRORS,
       payload: json
     });
   }
+  
 };

@@ -55,31 +55,24 @@ router.put(
   async (req, res) => {
     try {
       const application = await Application.findById(req.params.id);
-      if (!application)
-        return res.status(404).send({ error: "Application does not exist" });
+      // if (!application)
+      //   return res.status(404).send({ error: "Application does not exist" });
       const partner = await Partner.findOne({
         _id: application.partner
       });
       if (!partner)
         return res.status(404).send({ error: "Partner does not exist" });
-      
-      if (application.partner != partner._id) {
-        return res.status(400).json({
-          Unauthorized: "This Partner is not responsible for this Application"
-        });
-      }
-
       if (application.reviewed) {
         return res
           .status(400)
           .json({ error: "Cant edit application after it has been reviewed" });
       }
 
-      const isValidated = validator.updateValidation(req.body);
-      if (isValidated.error)
-        return res
-          .status(400)
-          .send({ error: isValidated.error.details[0].message });
+      // const isValidated = validator.updateValidation(req.body);
+      // if (isValidated.error)
+      //   return res
+      //     .status(400)
+      //     .send({ error: isValidated.error.details[0].message });
       const fields = {};
       if (req.body.needConsultancy) fields.needConsultancy = req.body.needConsultancy;
       if (req.body.description) fields.description = req.body.description;
@@ -87,7 +80,7 @@ router.put(
         {_id:application._id},
         { $set: fields }
       );
-      return res.json({ msg: "Application updated successfully" ,data: updatedApplication});
+      return res.json({ msg: "Application updated successfully" });
     } catch (error) {
       return res.status(404).json({ partnernotfound: "Partner not found" });
     }
@@ -172,7 +165,9 @@ router.get(
       const admin = await Admin.findOne({ user: req.user.id });
       if (!admin) return res.status(404).send({ error: "Admin not found" });
 
-      const applications = await Application.find({}).populate({
+      const applications = await Application.find({
+        reviewed: false
+      }).populate({
         path: "partner",
         populate: {
           path: "organization"
@@ -185,7 +180,7 @@ router.get(
   }
 );
 
-// @route   GET api/applications/partner/:id
+// @route   GET api/applications/partner
 // @desc    Gets Partner's Applications
 // @access  Private
 router.get(
@@ -267,11 +262,11 @@ router.get(
   }
 );
 
-// @route   GET api/applications/partner/:appID
+// @route   GET api/applications/partner/:id
 // @desc    Partner gets Application
 // @access  Private
 router.get(
-  "/partner/:appID",
+  "/partner/:id",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     try {
@@ -279,7 +274,7 @@ router.get(
       const partner = await Partner.findOne({ organization: organization._id });
       if (!partner) return res.status(404).send({ error: "Partner not found" });
 
-      const application = await Application.findById(req.params.appID).populate(
+      const application = await Application.findById(req.params.id).populate(
         {
           path: "partner",
           populate: { path: "organization" }
@@ -290,7 +285,7 @@ router.get(
 
       return res.json({ data: application });
     } catch (error) {
-      res.status(404).json({ adminnotfound: "Admin not found" });
+      res.status(404).json({ partnernotfound: "partner not found" });
       console.log(error);
     }
   }

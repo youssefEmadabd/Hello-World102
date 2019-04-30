@@ -31,7 +31,7 @@ class editapp extends Component {
       profile.description = profile.description !== null ? profile.description:"";
       this.setState({
        description: profile.description,
-       needConsultancy: profile.needConsultancy,
+       needConsultancy:profile.needConsultancy
       });
     }
   }
@@ -46,10 +46,7 @@ class editapp extends Component {
     if (AppData.description == "") {
       delete AppData.description;
     }
-    if (AppData.needConsultancy == "") {
-      delete AppData.needConsultancy;
-    }
-
+    
     var e = document.getElementById("select");
     var opt = e.options[e.selectedIndex].value;
     if(opt === "true"){

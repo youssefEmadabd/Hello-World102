@@ -71,14 +71,23 @@ class PartnerApplication extends Component {
               <div>
                 <div>{msgs}</div>
               </div>
-              <hr />
               <Link
                 to={`/api/applications/partner/negotiate/${application._id}`}
                 className="btn btn-lg btn-info"
               >
                 Negotiate
+              </Link> 
+                
+              
+              <hr />
+              <h3 className="text-center text-info">Create a Task</h3>
+              <Link
+                to={`/api/tasks/partner/${application._id}`}
+                className="btn btn-lg btn-info"
+              >
+                Create a Task
               </Link>
-            </div>
+            </div> 
           </div>
         </div>
       );

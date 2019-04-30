@@ -1,5 +1,4 @@
 import { GET_APPLICATION, GET_APPLICATIONS } from "../actions/types";
-import { POST_APPLICATION } from "../actions/types";
 import { GET_REVIEWED_APPLICATION } from "../actions/types";
 
 const initialState = {
